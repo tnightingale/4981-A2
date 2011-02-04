@@ -1,0 +1,6 @@
+*.o
+client
+server
+*.txt
+tmp.*
+test.*
