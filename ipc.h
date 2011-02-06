@@ -4,8 +4,9 @@
 #include <sys/msg.h>
 #include <iostream>
 
+#define MSGSIZE 2048
 #define MSGQUEUE_TMP "/tmp/"
-#define MAXMESGDATA (2048 - sizeof(long) - (2 * sizeof(int)) - sizeof(size_t)) /* don't want sizeof(Mesg) > 4096 */
+#define MAXMESGDATA (MSGSIZE - sizeof(long) - (2 * sizeof(int)) - sizeof(size_t))
 
 //#define MESGHDRSIZE (sizeof(Mesg) - MAXMESGDATA) /* length of mesg_len and mesg_type */
 
@@ -25,7 +26,7 @@ public:
   
   bool Create();
   bool Listen(int, MSG&);
-  int Write(MSG&);
+  bool Write(MSG&);
 
 private:
   int qid_;

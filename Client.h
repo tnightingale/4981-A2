@@ -1,13 +1,18 @@
 #include <string>
 #include <iostream>
 
+#define OPT_NO_OPTION 1
+#define OPT_FILENAME 2
+#define OPT_FILENAME_PRIORITY 3
+
+
 class Client {
 public:
   Client(key_t& key);
   virtual ~Client () {}
   
-  bool Request();
-  int Write(std::string&, int);
+  bool Request(std::string&, int = 5);
+  bool Write(std::string&, int);
   bool Listen();
 
 private:

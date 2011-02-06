@@ -9,19 +9,38 @@ using namespace std;
 
 int main (int argc, char const *argv[]) {
   key_t key;
+  string filename;
   
-  if (argc != 2) {
+  if (argc > 3) {
     // Error: Incorrect arguments; print usage.
+    return 1;
   }
   
   if ((key = ftok(MSGQUEUE_TMP, 1)) < 0) {
     perror("client_main: ERROR; Could not create key.");
-    return 1; // Error.
+    return 2; // Error.
   }
-  
   Client client(key);
-  if (!client.Request()) {
-    cerr << "client_main: ERROR; Request for file failed." << endl;
+  
+  // File path passed.
+  switch (argc) {    
+    // Only filename.
+    case OPT_FILENAME:
+      filename.insert(0, argv[1]);
+    
+      if (!client.Request(filename)) {
+        cerr << "client_main: ERROR; Request for file failed." << endl;
+      }
+      break;
+    
+    // Filename and priority.
+    case OPT_FILENAME_PRIORITY:
+      filename.insert(0, argv[1]);
+    
+      if (!client.Request(filename, atoi(argv[2]))) {
+        cerr << "client_main: ERROR; Request for file failed." << endl;
+      }
+      break;
   }
   
   client.Listen();

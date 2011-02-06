@@ -1,5 +1,7 @@
 #include <iostream>
 #include <sys/msg.h>
+#include <sys/resource.h>
+
 #include "ipc.h"
 
 #define MAX_CONNECTIONS 10
@@ -11,6 +13,8 @@ public:
   
   int Listen();
   bool ProcessMessage(MSG&);
+  size_t GetShare(int);
+  int GetProcPrio(int);
 
 private:
   size_t num_clients_;

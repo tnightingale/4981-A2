@@ -21,12 +21,13 @@ bool Connection::Listen(int type, MSG& msg) {
   return true;
 }
 
-int Connection::Write(MSG& msg) {
+bool Connection::Write(MSG& msg) {
   size_t length = sizeof(MSG) - sizeof(msg.type);
   
   if (msgsnd(this->qid_, &msg, length, 0) == -1) {
     perror("Connection::Write: Error; Failed writing to queue.");
+    return false;
   }
   
-  return 0;
+  return true;
 }

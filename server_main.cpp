@@ -32,13 +32,12 @@ int main(int argc, char const *argv[])
   Server server(key);
 
   // Restore the SIGCHLD
-  sigaction (SIGCHLD, &oldsa, NULL);
+  sigaction(SIGCHLD, &oldsa, NULL);
   
   return 0;
 }
 
 void NoZombie(int) {
   // Clean up the child process.
-  int status; 
-  wait(&status); 
+  wait(NULL); 
 }
