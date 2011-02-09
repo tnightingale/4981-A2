@@ -12,11 +12,31 @@ int main (int argc, char const *argv[]) {
   key_t key;
   string filename;
   
-  if (argc > 3) {
-    // Error: Incorrect arguments; print usage.
-    return 1;
+  for (int i = 1; i <= argc; i++) {
+    // Check for flags.
+    if (argv[i][0] == '-' && argv[i][2] == ' ') {
+      switch (argv[i++][1]) {
+        case 'o':
+          break;
+        default:
+          // Print usage.
+          return 1;
+          break;
+      }
+    }
+    
+    // Validate input filepath. 
+    else if (...) {
+    
+    } 
+    
+    // Print usage.
+    else {
+      return 1;
+    }
   }
   
+  // Begin.
   if ((key = ftok(MSGQUEUE_TMP, 1)) < 0) {
     perror("client_main: ERROR; Could not create key.");
     return 2; // Error.
