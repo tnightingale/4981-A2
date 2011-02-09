@@ -29,10 +29,11 @@ bool Client::Write(string& messagetext, int priority) {
   return true;
 }
 
-bool Client::Listen() {
+bool Client::Receive(ofstream& output) {
   MSG msg;
   int pid = getpid();
   size_t received = 0;
+  
   
   while (true) {  
     if (msg.priority == -1) break;
@@ -44,12 +45,12 @@ bool Client::Listen() {
 
     received += msg.data_len;
     
-    cout << "Client::Listen(); Msg received." << endl;
-    cout << "\tType:\n\t\t" << msg.type << endl;
-    cout << "\tSender's PID:\n\t\t" << msg.sender_pid << endl;
-    cout << "\tMessage priority:\n\t\t" << msg.priority << endl;
-    cout << "\tMessage: (Length: " << msg.data_len << ")\n\t\t" << msg.data << endl;
-    cout << "\n\t Total received: " << received << endl << endl << endl;
+    //cout << "Client::Listen(); Msg received." << endl;
+    //cout << "\tType:\n\t\t" << msg.type << endl;
+    //cout << "\tSender's PID:\n\t\t" << msg.sender_pid << endl;
+    //cout << "\tMessage priority:\n\t\t" << msg.priority << endl;
+    //cout << "\tMessage: (Length: " << msg.data_len << ")\n\t\t" << msg.data << endl;
+    //cout << "\n\t Total received: " << received << endl << endl << endl;
   }
   
   return true;

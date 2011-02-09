@@ -17,7 +17,7 @@ public:
   
   bool Request(std::string&, int = 5);
   bool Write(std::string&, int);
-  bool Listen();
+  bool Receive(std::ofstream& = 0);
 
 private:
   key_t key_;

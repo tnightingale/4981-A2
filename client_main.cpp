@@ -44,7 +44,7 @@ int main (int argc, char const *argv[]) {
       break;
   }
   
-  client.Listen();
+  client.Receive();
   
   return 0;
 }
