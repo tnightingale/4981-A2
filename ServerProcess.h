@@ -8,11 +8,13 @@ public:
   ServerProcess(Connection&, int, size_t);
   virtual ~ServerProcess() {}
   
+  bool FileAck(std::ifstream& file, char* filepath);
+  
   /**
    * Open file for reading.
    * Pass contents to Write() for sending.
    */
-  bool Respond(char*);
+  bool Respond(std::ifstream& file);
   
   /**
    * Prepare message object.
@@ -20,6 +22,9 @@ public:
    * Repeat until entire message has been sent.
    */
   bool Write(const char*, size_t, int);
+  
+  long GetFileLength(std::ifstream& filestream);
+  bool LongToString(long val, std::string& dest);
   
 private:
   Connection connection_;

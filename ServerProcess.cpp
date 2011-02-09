@@ -6,32 +6,49 @@ ServerProcess::ServerProcess(Connection& connection, int client_pid, size_t num_
 : connection_(connection), client_pid_(client_pid), qShare_(num_queue_shares) {}
 
 
-bool ServerProcess::Respond(char* filepath) {
-  char msg_str[MAXMESGDATA];
-  int msg_flag;
-  int remaining = qShare_;
+long ServerProcess::GetFileLength(ifstream& filestream) {
   long length = 0;
   
-  ifstream file(filepath, ios_base::in | ios_base::binary);
-  if (!file) {
+  filestream.seekg (0, ios::end);
+  length = filestream.tellg();
+  filestream.seekg (0, ios::beg);
+  
+  return length;
+}
+
+bool ServerProcess::LongToString(long val, string& dest) {
+  stringstream strstream;
+  strstream << val;
+  strstream >> dest;
+  
+  return true;
+}
+
+bool ServerProcess::FileAck(ifstream& file, char* filepath) {
+  long length = 0;
+  
+  file.open(filepath, ios_base::in | ios_base::binary);
+  if (!file.good()) {
     // Failed to open file.
     string error("Cannot find/open file.");
     this->Write(error.c_str(), error.length(), -1);
+    
     return false;
-  } 
-  
-  else {
-    file.seekg (0, ios::end);
-    length = file.tellg();
-    file.seekg (0, ios::beg);
-    
-    string filelength;
-    stringstream strstream;
-    strstream << length;
-    strstream >> filelength;
-    
-    this->Write(filelength.c_str(), filelength.length(), 0);
   }
+  
+  string filelength;
+  length = GetFileLength(file);
+  LongToString(length, filelength);
+  
+  this->Write(filelength.c_str(), filelength.length(), 0);
+  
+  return true;
+}
+
+bool ServerProcess::Respond(ifstream& file) {
+  char msg_str[MAXMESGDATA];
+  int msg_flag;
+  int remaining = qShare_;
   
   while (!file.eof()) {
     remaining = qShare_;

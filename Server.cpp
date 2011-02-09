@@ -56,6 +56,8 @@ int Server::Listen() {
 }
 
 bool Server::ProcessMessage(MSG& msg) {
+  ifstream file;
+  
   // Determine queue share based on priority.
   size_t queue_share = GetShare(msg.priority);
   int proc_prio = GetProcPrio(msg.priority);
@@ -63,9 +65,17 @@ bool Server::ProcessMessage(MSG& msg) {
   if (setpriority(PRIO_PROCESS, 0, proc_prio) < 0) {
     perror("Server::ProcessMessage; setproirity()");
   }
-  
+
   ServerProcess client_proc(connection_, msg.sender_pid, queue_share);
-  if (!client_proc.Respond(msg.data)) {
+  
+  if (!client_proc.FileAck(file, msg.data)) {
+    // Error: Problem reading file.
+    return false;
+  }
+
+
+  if (!client_proc.Respond(file)) {
+    // Error: Problem responding to file.
     return false;
   }
   
