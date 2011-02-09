@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+
 #include <stdlib.h>
 
 #include "ipc.h"
@@ -8,43 +9,55 @@
 
 using namespace std;
 
+void print_usage();
+
 int main (int argc, char const *argv[]) {
   key_t key;
-  string filename;
+  long priority;
+  char* validPriority;
   
-  if (argc > 3) {
-    // Error: Incorrect arguments; print usage.
+  if (argc != 3) {
+    print_usage();
     return 1;
   }
   
+  string filename(argv[1]);    
+  priority = strtol(argv[2], &validPriority, 0);
+  if (*validPriority != '\0' || priority < 1 || priority > 10) {
+    cerr << "client_main.cpp: Error: Invalid priority." << endl;
+    print_usage();
+    return 2;
+  }
+  
   if ((key = ftok(MSGQUEUE_TMP, 1)) < 0) {
-    perror("client_main: ERROR; Could not create key.");
-    return 2; // Error.
+    perror("client_main.cpp: Error; Could not create key.");
+    return 3; // Error.
   }
   Client client(key);
   
-  // File path passed.
-  switch (argc) {    
-    // Only filename.
-    case OPT_FILENAME:
-      filename.insert(0, argv[1]);
-    
-      if (!client.Request(filename)) {
-        cerr << "client_main: ERROR; Request for file failed." << endl;
-      }
-      break;
-    
-    // Filename and priority.
-    case OPT_FILENAME_PRIORITY:
-      filename.insert(0, argv[1]);
-    
-      if (!client.Request(filename, atoi(argv[2]))) {
-        cerr << "client_main: ERROR; Request for file failed." << endl;
-      }
-      break;
+  if (!client.Request(filename, priority)) {
+    cerr << "client_main.cpp: Error; Request for file failed." << endl;
   }
   
-  client.Receive();
+  // Check server's response.
+  if (client.WaitForResponse()) {
+    client.Receive();
+  }
+  
+  // Error: Server declined service.
+  else {
+    cerr << "client_main.cpp: Error; Server declined service." << endl;
+    return 4;
+  }
   
   return 0;
+}
+
+void print_usage() {
+  cout << "Usage: ./client filepath priority" << endl;
+  cout << "\t" << "- filepath: The path to the file requested." << endl;
+  cout << "\t" << "- priority: A number representing desired priority (1 - 10),";
+  cout << " where 1 is highest priority" << endl;
+  cout << "\t" << "\t" << "    ";
+  cout << "and 10 is lowest priority." << endl;
 }

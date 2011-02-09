@@ -22,6 +22,7 @@ int Server::Listen() {
     if (result > 0) {
       continue;
     }
+    
     // Error reading msg queue.
     else if (result < 0) {
       cerr << "Server::Listen(); Error receiving message." << endl;
@@ -48,7 +49,6 @@ int Server::Listen() {
       
       // End child process.
       exit(0);
-    
     }
   }
   
@@ -61,7 +61,7 @@ bool Server::ProcessMessage(MSG& msg) {
   int proc_prio = GetProcPrio(msg.priority);
 
   if (setpriority(PRIO_PROCESS, 0, proc_prio) < 0) {
-    perror("Server::ProcessMessage; setproirity: ");
+    perror("Server::ProcessMessage; setproirity()");
   }
   
   ServerProcess client_proc(connection_, msg.sender_pid, queue_share);

@@ -17,9 +17,12 @@ public:
   
   bool Request(std::string&, int = 5);
   bool Write(std::string&, int);
-  bool Receive(std::ofstream& = 0);
+  bool WaitForResponse();
+  bool Receive();
 
 private:
   key_t key_;
+  pid_t pid_;
   Connection connection_;
+  long filesize_;
 };
