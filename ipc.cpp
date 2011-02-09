@@ -10,15 +10,18 @@ Connection::Connection(key_t& key) {
   cerr << "\tqid_: " << hex << showbase << qid_ << endl;
 }
 
-bool Connection::Listen(int type, MSG& msg) {
+int Connection::Listen(int type, MSG& msg) {
   size_t length = sizeof(MSG) - sizeof(msg.type);
-
-  if (msgrcv(this->qid_, &msg, length, type, 0 & IPC_NOWAIT) == -1) {
+  
+  if ((msgrcv(this->qid_, &msg, length, type, 0) < 0)) {
+    if (errno == EINTR) {
+      return 1;
+    }
     perror("Connection::Listen: Error; Failed reading from queue.");
-    return false;
+    return -1;
   }
   
-  return true;
+  return 0;
 }
 
 bool Connection::Write(MSG& msg) {

@@ -14,11 +14,18 @@ int Server::Listen() {
   MSG msg;
   int pid;
   bool running = true;
+  int result = 0;
   
   while (running) {
-    if (!connection_.Listen(1, msg)) {
+    result = connection_.Listen(1, msg);
+    // Interrupt: SIGCHLD, continue listening.
+    if (result > 0) {
+      continue;
+    }
+    // Error reading msg queue.
+    else if (result < 0) {
       cerr << "Server::Listen(); Error receiving message." << endl;
-      return 1;
+      exit(2);
     }
     
     cout << "Server::Listen(); Msg received." << endl;

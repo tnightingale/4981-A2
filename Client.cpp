@@ -37,7 +37,11 @@ bool Client::Listen() {
   while (true) {  
     if (msg.priority == -1) break;
     
-    connection_.Listen(pid, msg);
+    if (connection_.Listen(pid, msg) < 0) {
+      perror("Client::Listen; Error listening to connection.");
+      return false;
+    }
+
     received += msg.data_len;
     
     cout << "Client::Listen(); Msg received." << endl;

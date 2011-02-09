@@ -7,6 +7,7 @@
 
 #include <sys/msg.h>
 #include <iostream>
+#include <errno.h>
 
 #if defined(__APPLE__)
 #define MSGSIZE 2048
@@ -32,7 +33,7 @@ public:
   virtual ~Connection() {}
   
   bool Create();
-  bool Listen(int, MSG&);
+  int Listen(int, MSG&);
   bool Write(MSG&);
 
 private:
