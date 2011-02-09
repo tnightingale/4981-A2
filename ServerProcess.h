@@ -1,4 +1,5 @@
 #include <fstream>
+#include <string.h>
 #include "ipc.h"
 
 class ServerProcess {

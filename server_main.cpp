@@ -3,6 +3,8 @@
 #include <string>
 #include <signal.h>
 
+#include <sys/wait.h>
+
 #include "ipc.h"
 #include "Server.h"
 

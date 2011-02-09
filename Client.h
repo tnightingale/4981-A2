@@ -1,3 +1,7 @@
+#ifdef __linux__ 
+#include <string.h>
+#endif
+
 #include <string>
 #include <iostream>
 

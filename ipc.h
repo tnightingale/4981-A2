@@ -1,14 +1,21 @@
 #ifndef IPC_H
 #define IPC_H
 
+#ifdef __linux__
+#include <stdio.h>
+#endif
+
 #include <sys/msg.h>
 #include <iostream>
 
+#if defined(__APPLE__)
 #define MSGSIZE 2048
+#else
+#define MSGSIZE 4096
+#endif
+
 #define MSGQUEUE_TMP "/tmp/"
 #define MAXMESGDATA (MSGSIZE - sizeof(long) - (2 * sizeof(int)) - sizeof(size_t))
-
-//#define MESGHDRSIZE (sizeof(Mesg) - MAXMESGDATA) /* length of mesg_len and mesg_type */
 
 typedef struct _MSG_ {
   long type;   // message type

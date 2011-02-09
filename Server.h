@@ -1,3 +1,7 @@
+#ifdef __linux__
+#include <stdlib.h>
+#endif
+
 #include <iostream>
 #include <sys/msg.h>
 #include <sys/resource.h>
