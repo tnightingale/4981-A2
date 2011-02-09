@@ -1,14 +1,10 @@
 #ifdef __linux__ 
+#include <stdlib.h>
 #include <string.h>
 #endif
 
 #include <string>
 #include <iostream>
-
-#define OPT_NO_OPTION 1
-#define OPT_FILENAME 2
-#define OPT_FILENAME_PRIORITY 3
-
 
 class Client {
 public:
