@@ -10,11 +10,33 @@
 
 using namespace std;
 
+/**
+ * Custom SIGCHLD handler.
+ * Ensures the server continues listening for new clients after being 
+ * interrupted by a child process exiting.
+ * 
+ * @author Tom Nightingale
+ */
 void catch_sigchld(int);
+
+/**
+ * Custom SIGINT handler.
+ * Ensures the server shuts down gracefully. This involves waiting for all 
+ * child processes to exit first and then freeing up any resources, closing
+ * any open connection.
+ *
+ * @author Tom Nightingale
+ */
 void catch_sigint(int);
 
-int main(int argc, char const *argv[])
-{
+/**
+ * Server's entry point.
+ * Responsible for setting any special signal handlers and creating the server 
+ * object.
+ *
+ * @author Tom Nightingale
+ */
+int main() {
   key_t key;
   struct sigaction sa;
   struct sigaction old_sigchld_sa;

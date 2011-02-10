@@ -8,8 +8,22 @@
 
 using namespace std;
 
+/**
+ * Helper function to print usage instructions to users.
+ *
+ * @author Tom Nightingale.
+ */
 void print_usage();
 
+/**
+ * Client's entry point.
+ * Parses user's input, requested file and priority and notifies on validation 
+ * error.
+ *
+ * Then creates a Client object which sends request for file.
+ *
+ * @author Tom Nightingale
+ */
 int main (int argc, char const *argv[]) {
   key_t key;
   long priority;

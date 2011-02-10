@@ -18,10 +18,6 @@ ServerProcess::ServerProcess(Connection& connection, int client_pid, size_t num_
   pid_ = getpid();
 }
 
-ServerProcess::~ServerProcess() {
-  //connection_.Cleanup(pid_);
-}
-
 long ServerProcess::GetFileLength(ifstream& filestream) {
   long length = 0;
   
@@ -83,7 +79,8 @@ bool ServerProcess::Respond(ifstream& file) {
 }
 
 
-bool ServerProcess::Write(const char* msg_text, size_t msg_text_len, int msg_flag, long type) {
+bool ServerProcess::Write(const char* msg_text, size_t msg_text_len, 
+        int msg_flag, long type) {
   MSG msg;
   int client_status = 0;
   int result = 0;
@@ -95,10 +92,14 @@ bool ServerProcess::Write(const char* msg_text, size_t msg_text_len, int msg_fla
   strncpy(msg.data, msg_text, msg_text_len);
   
   while ((result = connection_.Write(msg, IPC_NOWAIT)) == EAGAIN) {
+    // If client not responding, notify the connection to cleanup residual 
+    // messages.
     if ((client_status = kill(client_pid_, 0)) < 0 && msg_flag != -1) {
-      cout << "ServerProcess::Write(); Client (PID: " << client_pid_ << ") not responding, performing cleanup." << endl;
+      cout << "ServerProcess::Write(); Client (PID: " << client_pid_;
+      cout << ") not responding, performing cleanup." << endl;
       connection_.Cleanup(pid_);
       connection_.Cleanup(client_pid_);
+      
       return false;
     }
   }
