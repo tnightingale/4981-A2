@@ -36,7 +36,7 @@ public:
     key_t key = Connection::GetResKey();
     int qid = Connection::ConnectQueue(key);
     MSG msg;
-    std::string data("Received terminate signal from server, TERMINATING.");
+    std::string data("\nReceived terminate signal from server, TERMINATING.");
 
     msg.type = pid;
     msg.priority = -1;
