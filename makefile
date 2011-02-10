@@ -1,7 +1,7 @@
 # make for Semaphores
 
 CXX=g++
-FLAGS=-ansi -Wall -W -pedantic -ggdb
+FLAGS=-ansi -Wall -W -pedantic -ggdb -lpthread
 
 server: server_main.o Server.o ServerProcess.o ipc.o
 	$(CXX) $(FLAGS) $(PLATFORM) server_main.o Server.o ServerProcess.o ipc.o -o server
