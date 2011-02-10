@@ -6,7 +6,6 @@ using namespace std;
 Server::Server(key_t& key) : num_clients_(0), key_(key), connection_(key) {
   cerr << "Server started." << endl;
   cerr << "Listening..." << endl << endl;
-  
   this->Listen();
 }
 
@@ -29,12 +28,6 @@ int Server::Listen() {
       exit(2);
     }
     
-    //cout << "Server::Listen(); Msg received." << endl;
-    //cout << "\tType:\n\t\t" << msg.type << endl;
-    //cout << "\tPriority:\n\t\t" << msg.priority << endl;
-    //cout << "\tSender's PID:\n\t\t" << msg.sender_pid << endl;
-    //cout << "\tMessage: (Length: " << msg.data_len << ")\n\t\t" << msg.data << endl << endl;
-    
     // Create child process to manage client connection.
     if ((pid = fork()) == -1) {
       perror("Server::Listen; fork():");
@@ -50,7 +43,10 @@ int Server::Listen() {
       // End child process.
       exit(0);
     } else {
-      cout << "Connection: Client PID: " << msg.sender_pid << " <--> " << "ServerProcess PID: " << pid << " | Priority: " << msg.priority << endl;
+      cout << "Connection: Client PID: " << msg.sender_pid;
+      cout << " <--> ";
+      cout << "ServerProcess PID: " << pid;
+      cout << " | Priority: " << msg.priority << endl;
     }
   }
   

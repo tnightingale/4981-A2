@@ -24,13 +24,13 @@ public:
    * Write X message segments to queue then yeild (where X is qShare).
    * Repeat until entire message has been sent.
    */
-  bool Write(const char*, size_t, int);
+  bool Write(const char* msg, size_t msg_len, int flags);
   
   long GetFileLength(std::ifstream& filestream);
   bool LongToString(long val, std::string& dest);
   
 private:
   Connection connection_;
-  int client_pid_;
+  pid_t client_pid_;
   size_t qShare_;
 };
