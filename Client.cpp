@@ -25,7 +25,7 @@ bool Client::Write(string& messagetext, int priority) {
   msg.data_len = messagetext.size();
   strncpy(msg.data, messagetext.c_str(), msg.data_len);
   
-  if (!connection_.Write(msg)) {
+  if (connection_.Write(msg) < 0) {
     return false;
   }
   
@@ -72,6 +72,8 @@ bool Client::Receive() {
       perror("Client::Listen; Error listening to connection.");
       return false;
     }
+
+    cout << received << ":\t" << msg.data << endl;
 
     received += msg.data_len;
   }

@@ -56,6 +56,7 @@ bool ServerProcess::Respond(ifstream& file) {
       file.read(msg_str, MAXMESGDATA);
       
       msg_flag = (file.eof()) ? -1 : 0;
+
       if (!this->Write(msg_str, file.gcount(), msg_flag)) {
         return false;
       }
@@ -68,6 +69,8 @@ bool ServerProcess::Respond(ifstream& file) {
 
 bool ServerProcess::Write(const char* msg_text, size_t msg_text_len, int msg_flag) {
   MSG msg;
+  int client_status = 0;
+  int result = 0;
   
   msg.type = client_pid_;
   msg.sender_pid = 0;
@@ -75,7 +78,15 @@ bool ServerProcess::Write(const char* msg_text, size_t msg_text_len, int msg_fla
   msg.data_len = msg_text_len;
   strncpy(msg.data, msg_text, msg_text_len);
   
-  if (!connection_.Write(msg)) {
+  while ((result = connection_.Write(msg, IPC_NOWAIT)) == EAGAIN) {
+    if ((client_status = kill(client_pid_, 0)) < 0) {
+      cout << "ServerProcess::Write(); Client (PID: " << client_pid_ << ") not responding, performing cleanup." << endl;
+      connection_.Cleanup(client_pid_);
+      return false;
+    }
+  }
+
+  if (result == -1) {
     return false;
   }
   

@@ -19,7 +19,7 @@ int Server::Listen() {
   while (running) {
     result = connection_.Listen(1, msg);
     // Interrupt: SIGCHLD, continue listening.
-    if (result > 0) {
+    if (result == EINTR) {
       continue;
     }
     
@@ -29,11 +29,11 @@ int Server::Listen() {
       exit(2);
     }
     
-    cout << "Server::Listen(); Msg received." << endl;
-    cout << "\tType:\n\t\t" << msg.type << endl;
-    cout << "\tPriority:\n\t\t" << msg.priority << endl;
-    cout << "\tSender's PID:\n\t\t" << msg.sender_pid << endl;
-    cout << "\tMessage: (Length: " << msg.data_len << ")\n\t\t" << msg.data << endl << endl;
+    //cout << "Server::Listen(); Msg received." << endl;
+    //cout << "\tType:\n\t\t" << msg.type << endl;
+    //cout << "\tPriority:\n\t\t" << msg.priority << endl;
+    //cout << "\tSender's PID:\n\t\t" << msg.sender_pid << endl;
+    //cout << "\tMessage: (Length: " << msg.data_len << ")\n\t\t" << msg.data << endl << endl;
     
     // Create child process to manage client connection.
     if ((pid = fork()) == -1) {
@@ -49,6 +49,8 @@ int Server::Listen() {
       
       // End child process.
       exit(0);
+    } else {
+      cout << "Connection: Client PID: " << msg.sender_pid << " <--> " << "ServerProcess PID: " << pid << endl;
     }
   }
   

@@ -10,27 +10,35 @@ Connection::Connection(key_t& key) {
   cerr << "\tqid_: " << hex << showbase << qid_ << endl;
 }
 
-int Connection::Listen(int type, MSG& msg) {
+int Connection::Listen(int type, MSG& msg, int flags) {
   size_t length = sizeof(MSG) - sizeof(msg.type);
   
-  if ((msgrcv(this->qid_, &msg, length, type, 0) < 0)) {
-    if (errno == EINTR) {
-      return 1;
+  if ((msgrcv(this->qid_, &msg, length, type, flags) < 0)) {
+    if (errno == EINTR || errno == ENOMSG) {
+      return errno; 
     }
     perror("Connection::Listen: Error; Failed reading from queue.");
+    return errno;
+  }
+  
+  return 0;
+}
+
+int Connection::Write(MSG& msg, int flags) {
+  size_t length = sizeof(MSG) - sizeof(msg.type);
+  
+  if (msgsnd(this->qid_, &msg, length, flags) == -1) {
+    if (errno == EAGAIN) {
+      return errno;
+    }
+    perror("Connection::Write: Error; Failed writing to queue.");
     return -1;
   }
   
   return 0;
 }
 
-bool Connection::Write(MSG& msg) {
-  size_t length = sizeof(MSG) - sizeof(msg.type);
-  
-  if (msgsnd(this->qid_, &msg, length, 0) == -1) {
-    perror("Connection::Write: Error; Failed writing to queue.");
-    return false;
-  }
-  
-  return true;
+void Connection::Cleanup(int msg_type) {
+  MSG msg;
+  while (Listen(msg_type, msg, IPC_NOWAIT) != ENOMSG);
 }

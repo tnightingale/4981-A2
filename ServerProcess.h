@@ -1,6 +1,9 @@
 #include <fstream>
 #include <sstream>
 #include <string.h>
+#include <signal.h>
+#include <stdlib.h>
+
 #include "ipc.h"
 
 class ServerProcess {

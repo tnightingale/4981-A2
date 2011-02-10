@@ -33,8 +33,9 @@ public:
   virtual ~Connection() {}
   
   bool Create();
-  int Listen(int, MSG&);
-  bool Write(MSG&);
+  int Listen(int msg_type, MSG& msg, int flags = 0);
+  int Write(MSG& msg, int flags = 0);
+  void Cleanup(int msg_type);
 
 private:
   int qid_;
