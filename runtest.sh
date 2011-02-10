@@ -1,8 +1,8 @@
 #!/bin/bash
 
 os=`uname`
-command="./client tmp.txt"
-i=$1
+command="./client $1"
+i=$2
 
 while [ $i -gt 0 ]; do
   echo "Starting client, priority: $i"
@@ -14,7 +14,7 @@ while [ $i -gt 0 ]; do
     ./term -x "$command $i"
   fi
 
-  sleep $2
+  sleep $3
   let i-=2
 done
 

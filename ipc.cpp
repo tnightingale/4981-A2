@@ -40,5 +40,5 @@ int Connection::Write(MSG& msg, int flags) {
 
 void Connection::Cleanup(int msg_type) {
   MSG msg;
-  while (Listen(msg_type, msg, IPC_NOWAIT) != ENOMSG);
+  while (Listen(msg_type, msg, IPC_NOWAIT) != ENOMSG) ;
 }

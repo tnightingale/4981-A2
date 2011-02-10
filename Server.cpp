@@ -50,7 +50,7 @@ int Server::Listen() {
       // End child process.
       exit(0);
     } else {
-      cout << "Connection: Client PID: " << msg.sender_pid << " <--> " << "ServerProcess PID: " << pid << endl;
+      cout << "Connection: Client PID: " << msg.sender_pid << " <--> " << "ServerProcess PID: " << pid << " | Priority: " << msg.priority << endl;
     }
   }
   
