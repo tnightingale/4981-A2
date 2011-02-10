@@ -28,8 +28,13 @@ int main (int argc, char const *argv[]) {
   key_t key;
   long priority;
   char* validPriority;
+  bool interruptingThread = false;
   
-  if (argc != 3) {
+  if (argc > 3 && argv[3][0] == 't') {
+    interruptingThread = true;
+  }
+  
+  if (argc > 3 && !interruptingThread) {
     print_usage();
     return 1;
   }
@@ -43,7 +48,7 @@ int main (int argc, char const *argv[]) {
   }
   
   key = Connection::GetResKey();
-  Client client(key);
+  Client client(key, interruptingThread);
   
   if (!client.Request(filename, priority)) {
     cerr << "client_main.cpp: Error; Request for file failed." << endl;

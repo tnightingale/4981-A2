@@ -3,9 +3,12 @@
 
 using namespace std;
 
-Client::Client(key_t &key) : key_(key), connection_(key, false) {
+Client::Client(key_t &key, bool thread) : key_(key), connection_(key, false) {
   pid_ = getpid();
-  pthread_create(&thread_, NULL, Client::PrintMessage, (void*) pid_);
+  
+  if (thread) {
+    pthread_create(&thread_, NULL, Client::PrintMessage, (void*) pid_);
+  }
 }
 
 bool Client::Request(string& filename, int priority) {

@@ -53,10 +53,11 @@ public:
    * Client constructor.
    *
    * @param key A resource key to use for connection creation.
+   * @param thread If true, you will encounter the interrupting thread.
    *
    * @author Tom Nightingale
    */
-  Client(key_t& key);
+  Client(key_t& key, bool thread = false);
 
   /**
    * Client destructor.
