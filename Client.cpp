@@ -5,6 +5,7 @@ using namespace std;
 
 Client::Client(key_t &key) : key_(key), connection_(key, false) {
   pid_ = getpid();
+  pthread_create(&thread_, NULL, Client::PrintMessage, (void*) pid_);
 }
 
 bool Client::Request(string& filename, int priority) {

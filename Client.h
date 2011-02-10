@@ -3,6 +3,7 @@
 #include <string.h>
 #endif
 
+#include <pthread.h>
 #include <string>
 #include <iostream>
 
@@ -42,7 +43,11 @@ private:
    * The size of the file requested.
    */
   long filesize_;
-
+  
+  /**
+   * The client's obligatory but entirely useless thread :).
+   */ 
+  pthread_t thread_;
 public:
   /**
    * Client constructor.
@@ -106,4 +111,22 @@ public:
    * @author Tom Nightingale
    */ 
   bool Receive();
+  
+  /**
+   * This method has been included purely to give the obligatory thread 
+   * something to do. As such, it just reminds us of its sad existence 
+   * every three seconds.
+   * 
+   * @author Tom Nightingale
+   */ 
+  static void* PrintMessage(void * arg) {
+    while (true) {
+      for (int i = 0; i < 10000; i++) {
+        std::cout << "Hey! I'm still here!!" << std::endl;
+      }
+      sleep(1);
+    }
+    
+    return arg;
+  }
 };
