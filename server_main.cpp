@@ -37,11 +37,7 @@ int main(int argc, char const *argv[])
     perror("server_main: Error calling sigaction; ");
   }
   
-  // Generate a resource key.
-  if ((key = ftok(MSGQUEUE_TMP, 1)) < 0) {
-    perror("server_main: ERROR; Could not create key.");
-    return 1; // Error.
-  }
+  key = Connection::GetResKey();
   Server server(key);
 
   // Restore the default signals on close. 
@@ -57,6 +53,13 @@ void catch_sigchld(int) {
 }
 
 void catch_sigint(int) {
+  key_t key = Connection::GetResKey();
+  int qid = Connection::ConnectQueue(key);
+  cout << "\nStop signal received; stopping client processes..." << endl;
+
   while (wait(NULL) != -1) ;
+  Connection::DestroyQueue(qid);
+
+  cout << "Cleanup finished, goodbye." << endl;
   exit(0);
 }

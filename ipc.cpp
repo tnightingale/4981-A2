@@ -2,12 +2,14 @@
 
 using namespace std;
 
-Connection::Connection(key_t& key) {  
-  if ((qid_ = msgget(key, 0644 | IPC_CREAT)) == -1) {
-    perror("Connection::Connection: Error; Failed getting queue.");
+Connection::Connection(key_t& key, bool create) {  
+  if (create) {
+    qid_ = Connection::CreateQueue(key);
+  } else {
+    if ((qid_ = Connection::ConnectQueue(key)) == -1) {
+      // Throw exception.
+    }
   }
-  cerr << "Connection::Connection: Connection established." << endl;
-  cerr << "\tqid_: " << hex << showbase << qid_ << endl;
 }
 
 int Connection::Listen(int type, MSG& msg, int flags) {
@@ -18,7 +20,7 @@ int Connection::Listen(int type, MSG& msg, int flags) {
       return errno; 
     }
     perror("Connection::Listen: Error; Failed reading from queue.");
-    return errno;
+    return -1;
   }
   
   return 0;

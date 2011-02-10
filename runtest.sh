@@ -11,7 +11,7 @@ while [ $i -gt 0 ]; do
     gnome-terminal -e "$command $i"
   elif [[ $os == 'Darwin' ]]; then
     echo "Mac OS"
-    ./term -x "$command $i"
+    ./term "$command $i"
   fi
 
   sleep $3

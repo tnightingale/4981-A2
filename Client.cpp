@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Client::Client(key_t &key) : key_(key), connection_(key) {
+Client::Client(key_t &key) : key_(key), connection_(key, false) {
   pid_ = getpid();
 }
 
@@ -54,6 +54,8 @@ bool Client::WaitForResponse() {
     // Error.
     return false;
   }
+
+  serverProcPid_ = msg.sender_pid;
   
   return true;
 }

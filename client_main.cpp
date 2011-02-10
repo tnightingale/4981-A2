@@ -28,10 +28,7 @@ int main (int argc, char const *argv[]) {
     return 2;
   }
   
-  if ((key = ftok(MSGQUEUE_TMP, 1)) < 0) {
-    perror("client_main.cpp: Error; Could not create key.");
-    return 3; // Error.
-  }
+  key = Connection::GetResKey();
   Client client(key);
   
   if (!client.Request(filename, priority)) {
